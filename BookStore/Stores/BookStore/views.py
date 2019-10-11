@@ -34,10 +34,11 @@ class BookDetail(APIView):
         serializer = BooksSerailizer(data)
         return Response(serializer.data)
 
-    def post(self,request,bookname):
+    def put(self,request,bookname):
         try:
             BookInstance = Books.objects.get(pk=bookname)
         except:
+
             return Response({'msg': "Record Not Found for Update."},status=status.HTTP_404_NOT_FOUND)
 
         data = request.data
