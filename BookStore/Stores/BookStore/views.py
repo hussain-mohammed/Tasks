@@ -48,3 +48,14 @@ class BookDetail(APIView):
             return Response(serializer.data,status=202)
         return Response(serializer.errors,status=406)
 
+    def delete(self,request,bookname):
+        try:
+            BookInstance = Books.objects.get(pk=bookname)
+        except:
+            return Response({'msg': "Record Not Found for Update."}, status=status.HTTP_404_NOT_FOUND)
+        if request.method == "DELETE":
+            if BookInstance.delete():
+                return Response("Deleted Successfully")
+            return Response("Delete Failed")
+
+
