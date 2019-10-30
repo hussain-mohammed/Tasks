@@ -37,15 +37,15 @@ class BookDetail(APIView):
     def put(self,request,bookname):
         try:
             BookInstance = Books.objects.get(pk=bookname)
-        except:
-            return Response({'msg': "Record Not Found for Update."},status=status.HTTP_404_NOT_FOUND)
+        except:     
+            return Response({'msg': "Record Not Found for Update."}, status=status.HTTP_404_NOT_FOUND)
         if request.method == "PUT":
             data = request.data
             serializer = BooksSerailizer(BookInstance,data=data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data,status=202)
-            return Response(serializer.errors,status=406)
+                return Response(serializer.data, status=202)
+            return Response(serializer.errors, status=406)
 
     def delete(self,request,bookname):
         try:
