@@ -18,12 +18,6 @@ class register(APIView):
     def post(self, request):
         if request.method == 'POST':
             data = request.data
-            # username = data.get('Username', None)
-            # password = data.get('Password', None)
-            # 'ConfirmPassword' : data.get('ConfirmPassword',None)
-
-            # user = User.objects.create_user(username=username,password=password)
-            # user.save()
             serializer = UserSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
@@ -45,7 +39,6 @@ class profile(APIView):
         status_serializer = StatusSerializer(status, many=True)
         response = serializer.data + status_serializer.data
         if len(response) >= 2:
-            # return Response(serializer.data + status_serializer.data)
             return Response(serializer.data + [status])
         else:
             return Response(serializer.data + ['LOAN IS AVAILABLE. YOU CAN AVAIL USING BELOW FORMS'])
@@ -56,15 +49,14 @@ class profile(APIView):
             loanstatuslist = ['Available','Rejected','Foreclosed','Disbursed','Defaulter']
 
             if statusinstance['STATUS'] in loanstatuslist:
-                a = profile.loanapply(self,request)
+                postCall = profile.loanapply(self,request)
             elif statusinstance['STATUS'] == 'Approved':
-                a = profile.loanclosure(self,request)
+                postCall = profile.loanclosure(self,request)
             else:
                 return Response('Please wait!!!! Your Documents are being validated...',status=status.HTTP_400_BAD_REQUEST)
         except IndexError as e:
-            # logger(e)
-            a = profile.loanapply(self,request)
-        return a
+            postCall = profile.loanapply(self,request)
+        return postCall
 
     def loanapply(self, request):
         data = request.data
@@ -76,10 +68,6 @@ class profile(APIView):
                                       duration=data['duration'],
                                       STATUS='Pending'
                                       )
-            #     return Response(serializer.data, status=status.HTTP_200_OK)
-            # else:
-            #     return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
-
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -105,7 +93,7 @@ class profile(APIView):
                     loaninstance.STATUS = 'Disbursed'
                 else:
                     loaninstance.STATUS = 'Defaulter'
-                print(days,'-------------------------------')
+                
                 loaninstance.returnedIN = days
                 loaninstance.amountPaid = pay
                 loaninstance.save()
