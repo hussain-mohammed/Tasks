@@ -1,0 +1,7 @@
+setup.py
+StringMul/__init__.py
+StringMul/argsDecorators.py
+StringMul.egg-info/PKG-INFO
+StringMul.egg-info/SOURCES.txt
+StringMul.egg-info/dependency_links.txt
+StringMul.egg-info/top_level.txt
